@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Collection;
@@ -57,19 +59,25 @@ public class NerdLauncherFragment extends Fragment {
         mRecyclerView.setAdapter(new ActivityAdapter(activities));
     }
     private class ActivityHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
         private ResolveInfo mResolveInfo;
+        private ImageView mImageView;
         private TextView mNameTextView;
+        private LinearLayout mLinearLayout;
 
         public ActivityHolder(View itemView) {
             super(itemView);
-            mNameTextView = (TextView) itemView;
-            mNameTextView.setOnClickListener(this);
+            mLinearLayout = (LinearLayout) itemView.findViewById(R.id.item_linearlayout);
+            mNameTextView = (TextView)itemView.findViewById(R.id.item_fragment_name);
+            mImageView = (ImageView)itemView.findViewById(R.id.item_fragment_image);
+            mLinearLayout.setOnClickListener(this);
         }
         public void bindActivity(ResolveInfo resolveInfo) {
             mResolveInfo = resolveInfo;
             PackageManager pm = getActivity().getPackageManager();
             String appName = mResolveInfo.loadLabel(pm).toString();
             mNameTextView.setText(appName);
+            mImageView.setImageDrawable(resolveInfo.loadIcon(pm));
         }
         @Override
         public void onClick(View v) {
@@ -87,7 +95,7 @@ public class NerdLauncherFragment extends Fragment {
         @Override
         public ActivityHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            View view = layoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            View view = layoutInflater.inflate(R.layout.item_fragment_nerd_launcher, parent, false);
             return new ActivityHolder(view);
         }
         @Override
